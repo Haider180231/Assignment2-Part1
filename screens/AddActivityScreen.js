@@ -14,7 +14,7 @@ const AddActivityScreen = ({ navigation }) => {
   
 
   const handleSave = () => {
-    if (!activity || duration <= 0) {
+    if (!activity || duration <= 0 || isNaN(duration)) {
       Alert.alert('Invalid Input', 'Please make sure all fields are valid.');
       return;
     }
