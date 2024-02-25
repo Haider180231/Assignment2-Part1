@@ -1,10 +1,11 @@
-import React, { useState, useEffect } from 'react';
-import { View, Text, TextInput, Button, StyleSheet, Alert } from 'react-native';
+import React, { useState, useEffect, useLayoutEffect } from 'react';
+import { View, Text, TextInput, Button, StyleSheet, Alert, TouchableOpacity } from 'react-native';
 import DropDownPicker from 'react-native-dropdown-picker';
 import DateTimePickerModal from 'react-native-modal-datetime-picker';
 import Checkbox from 'expo-checkbox';
+import { Ionicons } from '@expo/vector-icons';
 import { db } from '../firebaseConfig';
-import { doc, updateDoc, getDoc } from 'firebase/firestore';
+import { doc, updateDoc, getDoc, deleteDoc } from 'firebase/firestore';
 
 const EditActivityScreen = ({ route, navigation }) => {
   const [open, setOpen] = useState(false);
@@ -15,6 +16,41 @@ const EditActivityScreen = ({ route, navigation }) => {
   const [important, setImportant] = useState(false);
   
   const activityId = route.params.activityId; 
+
+  useLayoutEffect(() => {
+    navigation.setOptions({
+      headerRight: () => (
+        <TouchableOpacity onPress={confirmDeletion}>
+          <Ionicons name="trash-bin" size={24} color="black" />
+        </TouchableOpacity>
+      ),
+    });
+  }, [navigation]);
+
+  const confirmDeletion = () => {
+    Alert.alert(
+      "Delete Activity",
+      "Are you sure you want to delete this activity?",
+      [
+        {
+          text: "Cancel",
+          style: "cancel"
+        },
+        { text: "Delete", onPress: deleteActivity, style: 'destructive' }
+      ]
+    );
+  };
+
+  const deleteActivity = async () => {
+    try {
+      await deleteDoc(doc(db, 'activities', activityId));
+      Alert.alert('Success', 'Activity deleted successfully');
+      navigation.goBack();
+    } catch (error) {
+        console.error("Error deleting document: ", error);
+      Alert.alert('Error', 'There was an error deleting the activity');
+    }
+  };
 
   useEffect(() => {
     const fetchActivity = async () => {
