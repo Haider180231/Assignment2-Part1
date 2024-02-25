@@ -1,22 +1,21 @@
 import React from 'react';
+import { getFirestore, doc, deleteDoc } from 'firebase/firestore';
 
 const ActivitiesContext = React.createContext();
 
 export default ActivitiesContext;
 
 export const ActivitiesProvider = ({ children }) => {
-    const [activities, setActivities] = React.useState([]);
-  
-    const addActivity = (activity) => {
-      const newActivity = {
-        ...activity,
-        id: Date.now() 
-      };
-      setActivities([...activities, newActivity]);
-    };
-  
-    const removeActivity = (id) => {
-      setActivities(activities.filter((activity) => activity.id !== id));
+    const removeActivity = async (id) => {
+      const db = getFirestore();
+      const activityRef = doc(db, 'activities', id);
+    
+      try {
+        await deleteDoc(activityRef);
+        console.log(`Activity with id ${id} has been deleted`);
+      } catch (error) {
+        console.error("Error removing activity: ", error);
+      }
     };
 
   

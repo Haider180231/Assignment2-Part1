@@ -13,7 +13,6 @@ const AddActivityScreen = ({ navigation }) => {
   const [duration, setDuration] = useState('');
   const [date, setDate] = useState(new Date());
   const [isDatePickerVisible, setDatePickerVisibility] = useState(false);
-  const { addActivity } = useContext(ActivitiesContext);
   
 
 
@@ -22,10 +21,18 @@ const AddActivityScreen = ({ navigation }) => {
       Alert.alert('Invalid Input', 'Please make sure all fields are valid.');
       return;
     }
+  
+    // Check if the activity is 'running' or 'weight training' and duration is more than 60
+    const isImportant = (activity === 'Running' || activity === 'Weight Training') && duration > 60;
+  
+    // Format the date to include only year-month-day
+    const formattedDate = date.toISOString().split('T')[0];
+  
     const newActivity = {
       type: activity,
       duration: parseInt(duration, 10), // Ensure duration is a number
-      date: date.toISOString(), // Use ISO string or another appropriate date format
+      date: formattedDate, // Save only the year-month-day part
+      important: isImportant, // Set important flag based on conditions
     };
     
     try {
@@ -37,6 +44,7 @@ const AddActivityScreen = ({ navigation }) => {
       Alert.alert('Error', 'There was an error adding the activity');
     }
   };
+  
 
 
   const showDatePicker = () => {
