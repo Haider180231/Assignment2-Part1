@@ -6,6 +6,7 @@ import Checkbox from 'expo-checkbox';
 import { Ionicons } from '@expo/vector-icons';
 import { db } from '../firebaseConfig';
 import { doc, updateDoc, getDoc, deleteDoc } from 'firebase/firestore';
+import CustomButton from '../components/CustomButton';
 
 const EditActivityScreen = ({ route, navigation }) => {
   const [open, setOpen] = useState(false);
@@ -73,13 +74,11 @@ const EditActivityScreen = ({ route, navigation }) => {
 
 
   const handleSave = async () => {
-    // 验证输入逻辑保持不变
     if (!activity || duration <= 0 || isNaN(duration)) {
       Alert.alert('Invalid Input', 'Please make sure all fields are valid.');
       return;
     }
   
-    // 确认保存更改
     Alert.alert(
       "Confirm Save",
       "Are you sure you want to save these changes?",
@@ -137,6 +136,7 @@ const EditActivityScreen = ({ route, navigation }) => {
 
   return (
     <View style={styles.container}>
+    <View style={{flex: 1}}>
       <DropDownPicker
         open={open}
         value={activity}
@@ -179,6 +179,8 @@ const EditActivityScreen = ({ route, navigation }) => {
         onCancel={hideDatePicker}
         date={date}
       />
+      </View>
+      <View>
       <View style={styles.checkboxContainer}>
         {(activity === 'Running' || activity === 'Weight Training') && parseInt(duration) > 60 && (
             <Checkbox
@@ -188,11 +190,15 @@ const EditActivityScreen = ({ route, navigation }) => {
             />
         )}
         {(activity === 'Running' || activity === 'Weight Training') && parseInt(duration) > 60 && (
-            <Text style={styles.label}>Special Activity</Text>
+            <Text style={styles.label}>This item is marked as special. Select the checkbox if you would like to approve it.</Text>
         )}
       </View>
       <View style={styles.buttonContainer}>
-        <Button title="Save" onPress={handleSave} color="#7D7B9B" />
+        <CustomButton 
+        title="Save"
+        onPress={handleSave}
+        />
+      </View>
       </View>
     </View>
   );
@@ -203,6 +209,7 @@ const styles = StyleSheet.create({
       flex: 1,
       padding: 20,
       backgroundColor: '#EDE7F6', 
+      justifyContent: 'space-between'
     },
     dropdown: {
       backgroundColor: '#fafafa',
@@ -225,14 +232,14 @@ const styles = StyleSheet.create({
       color: '#000',
     },
     buttonContainer: {
-      marginTop: 10,
       borderRadius: 10, 
       overflow: 'hidden', 
+      marginBottom: '25%',
     },
     checkboxContainer: {
         flexDirection: 'row',
         alignItems: 'center',
-        marginBottom: 20, 
+        marginBottom: 20,
       },
       checkbox: {
         marginRight: 8, 

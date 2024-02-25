@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { View, Text, TextInput, Button, StyleSheet, Alert } from 'react-native';
+import CustomButton from '../components/CustomButton';
 
 
 const StartScreen = ({ navigation }) => {
@@ -45,8 +46,9 @@ const StartScreen = ({ navigation }) => {
           style={[styles.input, !isPhoneValid && phoneNumber.length > 0 ? styles.errorInput : null]}
         />
         {isPhoneValid || phoneNumber.length === 0 ? null : <Text style={styles.errorText}>Please enter a valid phone number.</Text>}
-        <Button title="Start" onPress={handleStartPress} disabled={!(isEmailValid && isPhoneValid)} />
-        <Button title="Reset" onPress={handleResetPress} />
+        <CustomButton title="Start" onPress={handleStartPress} disabled={!(isEmailValid && isPhoneValid)} style={styles.button} />
+        <CustomButton title="Reset" onPress={handleResetPress} style={styles.button} />
+
       </View>
     );
   };
@@ -71,6 +73,9 @@ const StartScreen = ({ navigation }) => {
     errorText: {
       color: 'red',
       alignSelf: 'flex-start',
+    },
+    button: {
+      marginTop: 10, 
     },
   });
   

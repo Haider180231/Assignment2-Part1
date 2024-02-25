@@ -2,6 +2,7 @@ import React, { useState, useContext } from 'react';
 import { View, Text, TextInput, Button, StyleSheet, Alert } from 'react-native';
 import DropDownPicker from 'react-native-dropdown-picker';
 import DateTimePickerModal from 'react-native-modal-datetime-picker'; 
+import CustomButton from '../components/CustomButton';
 
 import { db } from '../firebaseConfig';
 import { collection, addDoc } from 'firebase/firestore';
@@ -64,6 +65,7 @@ const AddActivityScreen = ({ navigation }) => {
 
   return (
     <View style={styles.container}>
+      <View style={{flex: 1}}>
       <DropDownPicker
         open={open}
         value={activity}
@@ -108,8 +110,12 @@ const AddActivityScreen = ({ navigation }) => {
         onCancel={hideDatePicker}
         date={date} 
       />
+      </View>
       <View style={styles.buttonContainer}>
-        <Button title="Save" onPress={handleSave} color="#7D7B9B" />
+      <CustomButton 
+        title="Save"
+        onPress={handleSave}
+        />
       </View>
     </View>
   );
@@ -120,6 +126,7 @@ const styles = StyleSheet.create({
     flex: 1,
     padding: 20,
     backgroundColor: '#EDE7F6', 
+    justifyContent: 'space-between'
   },
   dropdown: {
     backgroundColor: '#fafafa',
@@ -142,9 +149,9 @@ const styles = StyleSheet.create({
     color: '#000',
   },
   buttonContainer: {
-    marginTop: 10,
     borderRadius: 10, 
     overflow: 'hidden', 
+    marginBottom: '25%',
   },
 });
 
