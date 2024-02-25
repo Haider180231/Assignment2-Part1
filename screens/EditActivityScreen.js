@@ -71,7 +71,29 @@ const EditActivityScreen = ({ route, navigation }) => {
     fetchActivity();
   }, [activityId]);
 
+
   const handleSave = async () => {
+    // 验证输入逻辑保持不变
+    if (!activity || duration <= 0 || isNaN(duration)) {
+      Alert.alert('Invalid Input', 'Please make sure all fields are valid.');
+      return;
+    }
+  
+    // 确认保存更改
+    Alert.alert(
+      "Confirm Save",
+      "Are you sure you want to save these changes?",
+      [
+        {
+          text: "Cancel",
+          style: "cancel"
+        },
+        { text: "Save", onPress: () => saveActivity() }
+      ]
+    );
+  };
+
+  const saveActivity = async () => {
     // Validation logic here
     if (!activity || duration <= 0 || isNaN(duration)) {
       Alert.alert('Invalid Input', 'Please make sure all fields are valid.');
@@ -81,7 +103,7 @@ const EditActivityScreen = ({ route, navigation }) => {
     const formattedDate = date.toISOString().split('T')[0];
     const isActivityImportant = !important && ((activity === 'Running' || activity === 'Weight Training') && duration > 60);
 
-    
+
     const updatedActivity = {
       type: activity,
       duration: parseInt(duration, 10),
@@ -158,14 +180,16 @@ const EditActivityScreen = ({ route, navigation }) => {
         date={date}
       />
       <View style={styles.checkboxContainer}>
-        <Checkbox
-          value={important}
-          onValueChange={(newValue) => {
-            setImportant(newValue);
-          }} 
-          style={styles.checkbox}
-        />
-        <Text style={styles.label}>Special Activity</Text>
+        {(activity === 'Running' || activity === 'Weight Training') && parseInt(duration) > 60 && (
+            <Checkbox
+            value={important}
+            onValueChange={setImportant}
+            style={styles.checkbox}
+            />
+        )}
+        {(activity === 'Running' || activity === 'Weight Training') && parseInt(duration) > 60 && (
+            <Text style={styles.label}>Special Activity</Text>
+        )}
       </View>
       <View style={styles.buttonContainer}>
         <Button title="Save" onPress={handleSave} color="#7D7B9B" />
