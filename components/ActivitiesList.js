@@ -15,6 +15,8 @@ const ActivitiesList = ({ activities, specialOnly }) => {
   // Filter activities based on the specialOnly flag
   const filteredActivities = specialOnly ? activities.filter(isSpecial) : activities;
 
+  
+
   // Render each activity item
   const renderActivityItem = ({ item }) => (
     <View style={styles.item}>

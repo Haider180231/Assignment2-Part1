@@ -3,6 +3,9 @@ import { View, Text, TextInput, Button, StyleSheet, Alert } from 'react-native';
 import DropDownPicker from 'react-native-dropdown-picker';
 import DateTimePickerModal from 'react-native-modal-datetime-picker'; 
 import ActivitiesContext from '../contexts/ActivitiesContext';
+import { db } from '../firebaseConfig';
+import { collection, addDoc } from 'firebase/firestore';
+
 
 const AddActivityScreen = ({ navigation }) => {
   const [open, setOpen] = useState(false);
@@ -13,16 +16,26 @@ const AddActivityScreen = ({ navigation }) => {
   const { addActivity } = useContext(ActivitiesContext);
   
 
-  const handleSave = () => {
+
+  const handleSave = async () => {
     if (!activity || duration <= 0 || isNaN(duration)) {
       Alert.alert('Invalid Input', 'Please make sure all fields are valid.');
       return;
     }
-    addActivity({ type: activity, duration, date: date.toLocaleDateString() });
-    setActivity(null);
-    setDuration('');
-    setDate(new Date());
-    navigation.navigate('Main');
+    const newActivity = {
+      type: activity,
+      duration: parseInt(duration, 10), // Ensure duration is a number
+      date: date.toISOString(), // Use ISO string or another appropriate date format
+    };
+    
+    try {
+      await addDoc(collection(db, 'activities'), newActivity);
+      Alert.alert('Success', 'Activity added successfully');
+      navigation.goBack(); // or navigation.navigate('SomeScreen');
+    } catch (error) {
+      console.error("Error adding activity: ", error);
+      Alert.alert('Error', 'There was an error adding the activity');
+    }
   };
 
 

@@ -2,10 +2,11 @@ import React, { useContext } from 'react';
 import { View, StyleSheet } from 'react-native';
 import ActivitiesList from '../components/ActivitiesList';
 import ActivitiesContext from '../contexts/ActivitiesContext';
+import useFirestoreActivities from '../hooks/useFirestoreActivities';
 
 const AllActivitiesScreen = () => {
-  const { activities } = useContext(ActivitiesContext);
-
+  // const { activities } = useContext(ActivitiesContext);
+  const activities = useFirestoreActivities();
 
   return (
     <View style={styles.container}>
