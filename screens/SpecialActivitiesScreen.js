@@ -9,7 +9,7 @@ const SpecialActivitiesScreen = () => {
 
   return (
     <View style={styles.container}>
-      <ActivitiesList activities={activities} specialOnly={true} />
+      <ActivitiesList activities={activities} importantOnly={true} />
     </View>
   );
 };

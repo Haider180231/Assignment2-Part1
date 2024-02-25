@@ -1,38 +1,28 @@
 import React from 'react';
-import { View, Text, FlatList, StyleSheet } from 'react-native';
-import { TouchableOpacity } from 'react-native';
+import { View, Text, FlatList, StyleSheet, Alert, TouchableOpacity } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
 import { Ionicons } from '@expo/vector-icons';
 import { db } from "../firebaseConfig";
 import { doc, deleteDoc } from 'firebase/firestore';
-import { Alert } from 'react-native';
 
-
-const ActivitiesList = ({ activities, specialOnly }) => {
+const ActivitiesList = ({ activities, importantOnly }) => {
   const navigation = useNavigation();
 
-  const isSpecial = (activity) => {
-    return (activity.type === 'Running' || activity.type === 'Weight Training') && activity.duration > 60;
-  };
+  const filteredActivities = importantOnly ? activities.filter(activity => activity.important) : activities;
 
   const handlePressActivity = (id) => {
     navigation.navigate('EditActivityScreen', { activityId: id });
-
   };
-
-  // Filter activities based on the specialOnly flag
-  const filteredActivities = specialOnly ? activities.filter(isSpecial) : activities;
 
   const handleDelete = async (id) => {
     try {
       await deleteDoc(doc(db, 'activities', id));
-      Alert.alert('Success', 'Activity deleted successfully');     
+      Alert.alert('Success', 'Activity deleted successfully');
     } catch (error) {
       console.error("Error removing activity: ", error);
       Alert.alert('Error', 'There was an error deleting the activity');
     }
   };
-  
 
   // Render each activity item
   const renderActivityItem = ({ item }) => (
@@ -40,7 +30,7 @@ const ActivitiesList = ({ activities, specialOnly }) => {
       <View style={styles.item}>
         <View style={styles.rowContainer}>
           <Text style={styles.title}>
-            {item.type} {isSpecial(item) && <Text style={styles.special}>🌟</Text>}
+            {item.type} {item.important && <Text style={styles.important}>🌟</Text>}
           </Text>
           <Text style={styles.duration}>{item.duration} min</Text>
           <Text style={styles.date}>{item.date}</Text>
@@ -51,7 +41,6 @@ const ActivitiesList = ({ activities, specialOnly }) => {
       </View>
     </TouchableOpacity>
   );
-  
 
   return (
     <FlatList
@@ -64,46 +53,46 @@ const ActivitiesList = ({ activities, specialOnly }) => {
 
 const styles = StyleSheet.create({
   item: {
-    backgroundColor: '#6e3b6e', 
+    backgroundColor: '#6e3b6e',
     padding: 20,
-    borderRadius: 10, 
+    borderRadius: 10,
     marginVertical: 8,
     marginHorizontal: 16,
-    shadowColor: '#000', 
+    shadowColor: '#000',
     shadowOffset: {
       width: 0,
       height: 2,
     },
     shadowOpacity: 0.25,
     shadowRadius: 3.84,
-    elevation: 5, 
+    elevation: 5,
   },
   rowContainer: {
-    flexDirection: 'row', 
-    alignItems: 'center', 
-    justifyContent: 'space-between', 
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-between',
   },
   title: {
-    fontSize: 24, 
-    fontWeight: 'bold', 
-    color: 'white', 
-    marginBottom: 4, 
+    fontSize: 24,
+    fontWeight: 'bold',
+    color: 'white',
+    marginBottom: 4,
     flex: 2,
   },
   duration: {
-    fontSize: 18, 
-    color: 'white', 
-    marginBottom: 4, 
+    fontSize: 18,
+    color: 'white',
+    marginBottom: 4,
     flex: 1,
   },
   date: {
-    fontSize: 16, 
-    color: 'white', 
+    fontSize: 16,
+    color: 'white',
     flex: 2,
   },
-  special: {
-    fontSize: 24, 
-    color: 'yellow', 
+  important: {
+    fontSize: 24,
+    color: 'yellow',
   },
   deleteIcon: {
     position: 'absolute',
@@ -111,6 +100,5 @@ const styles = StyleSheet.create({
     right: 20,
   }
 });
-
 
 export default ActivitiesList;

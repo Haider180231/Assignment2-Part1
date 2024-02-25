@@ -12,9 +12,9 @@ const EditActivityScreen = ({ route, navigation }) => {
   const [duration, setDuration] = useState('');
   const [date, setDate] = useState(new Date());
   const [isDatePickerVisible, setDatePickerVisibility] = useState(false);
-  const [isSpecial, setIsSpecial] = useState(false);
-
-  const activityId = route.params.activityId; // 假设 activityId 是通过路由参数传递的
+  const [important, setImportant] = useState(false);
+  
+  const activityId = route.params.activityId; 
 
   useEffect(() => {
     const fetchActivity = async () => {
@@ -26,7 +26,7 @@ const EditActivityScreen = ({ route, navigation }) => {
         setActivity(data.type);
         setDuration(data.duration.toString());
         setDate(new Date(data.date));
-        setIsSpecial(data.special); 
+        setImportant(data.important);
       } else {
         Alert.alert('Error', 'No such activity found!');
       }
@@ -43,14 +43,14 @@ const EditActivityScreen = ({ route, navigation }) => {
     }
 
     const formattedDate = date.toISOString().split('T')[0];
+    const isActivityImportant = !important && ((activity === 'Running' || activity === 'Weight Training') && duration > 60);
 
-    const isImportant = (activity === 'Running' || activity === 'Weight Training') && duration > 60;
-
+    
     const updatedActivity = {
       type: activity,
       duration: parseInt(duration, 10),
       date: formattedDate,
-      important: isImportant,
+      important: isActivityImportant,
     };
 
     try {
@@ -123,8 +123,10 @@ const EditActivityScreen = ({ route, navigation }) => {
       />
       <View style={styles.checkboxContainer}>
         <Checkbox
-          value={isSpecial}
-          onValueChange={setIsSpecial}
+          value={important}
+          onValueChange={(newValue) => {
+            setImportant(newValue);
+          }} 
           style={styles.checkbox}
         />
         <Text style={styles.label}>Special Activity</Text>
@@ -168,10 +170,13 @@ const styles = StyleSheet.create({
       overflow: 'hidden', 
     },
     checkboxContainer: {
-      flexDirection: 'row',
-      alignItems: 'center',
-      // ... 其他样式
-    },
+        flexDirection: 'row',
+        alignItems: 'center',
+        marginBottom: 20, 
+      },
+      checkbox: {
+        marginRight: 8, 
+      },
   });
 
 export default EditActivityScreen;
