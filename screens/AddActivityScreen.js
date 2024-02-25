@@ -2,7 +2,7 @@ import React, { useState, useContext } from 'react';
 import { View, Text, TextInput, Button, StyleSheet, Alert } from 'react-native';
 import DropDownPicker from 'react-native-dropdown-picker';
 import DateTimePickerModal from 'react-native-modal-datetime-picker'; 
-import ActivitiesContext from '../contexts/ActivitiesContext';
+
 import { db } from '../firebaseConfig';
 import { collection, addDoc } from 'firebase/firestore';
 

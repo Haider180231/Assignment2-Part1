@@ -1,12 +1,14 @@
 import React, { useContext } from 'react';
 import { View, Text, FlatList, StyleSheet } from 'react-native';
 import { TouchableOpacity } from 'react-native';
-import ActivitiesContext from '../contexts/ActivitiesContext';
+
 import { Ionicons } from '@expo/vector-icons';
+import { db } from "../firebaseConfig";
+import { getFirestore, doc, deleteDoc } from 'firebase/firestore';
+import { Alert } from 'react-native';
+
 
 const ActivitiesList = ({ activities, specialOnly }) => {
-  // Access the removeActivity function from ActivitiesContext
-  const { removeActivity } = useContext(ActivitiesContext);
 
   const isSpecial = (activity) => {
     return (activity.type === 'Running' || activity.type === 'Weight Training') && activity.duration > 60;
@@ -15,6 +17,15 @@ const ActivitiesList = ({ activities, specialOnly }) => {
   // Filter activities based on the specialOnly flag
   const filteredActivities = specialOnly ? activities.filter(isSpecial) : activities;
 
+  const handleDelete = async (id) => {
+    try {
+      await deleteDoc(doc(db, 'activities', id));
+      Alert.alert('Success', 'Activity deleted successfully');     
+    } catch (error) {
+      console.error("Error removing activity: ", error);
+      Alert.alert('Error', 'There was an error deleting the activity');
+    }
+  };
   
 
   // Render each activity item
@@ -27,7 +38,7 @@ const ActivitiesList = ({ activities, specialOnly }) => {
         <Text style={styles.duration}>{item.duration} min</Text>
         <Text style={styles.date}>{item.date}</Text>
       </View>
-      <TouchableOpacity style={styles.deleteIcon} onPress={() => removeActivity(item.id)}>
+      <TouchableOpacity style={styles.deleteIcon} onPress={() => handleDelete(item.id)}>
         <Ionicons name="trash-bin" size={24} color="red" />
       </TouchableOpacity>
     </View>
