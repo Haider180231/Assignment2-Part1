@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useLayoutEffect } from 'react';
-import { View, Text, TextInput, Button, StyleSheet, Alert, TouchableOpacity } from 'react-native';
+import { View, Text, TextInput, Alert, TouchableOpacity } from 'react-native';
 import DropDownPicker from 'react-native-dropdown-picker';
 import DateTimePickerModal from 'react-native-modal-datetime-picker';
 import Checkbox from 'expo-checkbox';
@@ -7,6 +7,7 @@ import { Ionicons } from '@expo/vector-icons';
 import { db } from '../firebaseConfig';
 import { doc, updateDoc, getDoc, deleteDoc } from 'firebase/firestore';
 import CustomButton from '../components/CustomButton';
+import { globalStyles } from '../components/Helper';
 
 const EditActivityScreen = ({ route, navigation }) => {
   const [open, setOpen] = useState(false);
@@ -135,7 +136,7 @@ const EditActivityScreen = ({ route, navigation }) => {
   };
 
   return (
-    <View style={styles.container}>
+    <View style={globalStyles.container}>
     <View style={{flex: 1}}>
       <DropDownPicker
         open={open}
@@ -154,7 +155,7 @@ const EditActivityScreen = ({ route, navigation }) => {
         setItems={() => {}}
         defaultValue={activity}
         containerStyle={{ height: 40, marginBottom: 20 }}
-        style={styles.dropdown}
+        style={globalStyles.dropdown}
         dropDownStyle={{ backgroundColor: '#fafafa' }}
         onChangeItem={(item) => setActivity(item.value)}
       />
@@ -163,10 +164,10 @@ const EditActivityScreen = ({ route, navigation }) => {
         value={duration}
         onChangeText={setDuration}
         keyboardType="numeric"
-        style={styles.input}
+        style={globalStyles.input}
       />
       <TextInput
-        style={styles.dateInput}
+        style={globalStyles.dateInput}
         value={date.toLocaleDateString()}
         placeholder="Choose Date"
         onTouchStart={showDatePicker}
@@ -181,19 +182,20 @@ const EditActivityScreen = ({ route, navigation }) => {
       />
       </View>
       <View>
-      <View style={styles.checkboxContainer}>
+      <View style={globalStyles.checkboxContainer}>
+        {(activity === 'Running' || activity === 'Weight Training') && parseInt(duration) > 60 && (
+            <Text style={globalStyles.label}>This item is marked as special. Select the checkbox if you would like to approve it.</Text>
+        )}
         {(activity === 'Running' || activity === 'Weight Training') && parseInt(duration) > 60 && (
             <Checkbox
             value={important}
             onValueChange={setImportant}
-            style={styles.checkbox}
+            style={globalStyles.checkbox}
             />
         )}
-        {(activity === 'Running' || activity === 'Weight Training') && parseInt(duration) > 60 && (
-            <Text style={styles.label}>This item is marked as special. Select the checkbox if you would like to approve it.</Text>
-        )}
+        
       </View>
-      <View style={styles.buttonContainer}>
+      <View style={globalStyles.buttonContainer}>
         <CustomButton 
         title="Save"
         onPress={handleSave}
@@ -204,46 +206,5 @@ const EditActivityScreen = ({ route, navigation }) => {
   );
 };
 
-const styles = StyleSheet.create({
-    container: {
-      flex: 1,
-      padding: 20,
-      backgroundColor: '#EDE7F6', 
-      justifyContent: 'space-between'
-    },
-    dropdown: {
-      backgroundColor: '#fafafa',
-      borderRadius: 10, 
-    },
-    input: {
-      borderWidth: 1,
-      borderColor: '#B39DDB', 
-      padding: 10,
-      marginBottom: 20,
-      borderRadius: 10,
-      color: '#000', 
-    },
-    dateInput: {
-      borderWidth: 1,
-      borderColor: '#B39DDB',
-      padding: 10,
-      marginBottom: 20,
-      borderRadius: 10,
-      color: '#000',
-    },
-    buttonContainer: {
-      borderRadius: 10, 
-      overflow: 'hidden', 
-      marginBottom: '25%',
-    },
-    checkboxContainer: {
-        flexDirection: 'row',
-        alignItems: 'center',
-        marginBottom: 20,
-      },
-      checkbox: {
-        marginRight: 8, 
-      },
-  });
 
 export default EditActivityScreen;

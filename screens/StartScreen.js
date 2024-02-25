@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
-import { View, Text, TextInput, Button, StyleSheet, Alert } from 'react-native';
+import { View, Text, TextInput, StyleSheet, Alert } from 'react-native';
 import CustomButton from '../components/CustomButton';
+import { globalStyles } from '../components/Helper';
 
 
 const StartScreen = ({ navigation }) => {
@@ -35,7 +36,7 @@ const StartScreen = ({ navigation }) => {
           onChangeText={setEmail}
           autoCapitalize="none"
           keyboardType="email-address"
-          style={[styles.input, !isEmailValid && email.length > 0 ? styles.errorInput : null]}
+          style={[globalStyles.input, !isEmailValid && email.length > 0 ? globalStyles.errorInput : null]}
         />
         {isEmailValid || email.length === 0 ? null : <Text style={styles.errorText}>Please enter a valid email address.</Text>}
         <TextInput
@@ -43,7 +44,7 @@ const StartScreen = ({ navigation }) => {
           value={phoneNumber}
           onChangeText={setPhoneNumber}
           keyboardType="phone-pad"
-          style={[styles.input, !isPhoneValid && phoneNumber.length > 0 ? styles.errorInput : null]}
+          style={[globalStyles.input, !isPhoneValid && phoneNumber.length > 0 ? globalStyles.errorInput : null]}
         />
         {isPhoneValid || phoneNumber.length === 0 ? null : <Text style={styles.errorText}>Please enter a valid phone number.</Text>}
         <CustomButton title="Start" onPress={handleStartPress} disabled={!(isEmailValid && isPhoneValid)} style={styles.button} />
@@ -59,20 +60,6 @@ const StartScreen = ({ navigation }) => {
       justifyContent: 'center',
       padding: 20,
       backgroundColor: '#EDE7F6'
-    },
-    input: {
-      marginVertical: 10,
-      borderWidth: 1,
-      padding: 10,
-      borderRadius: 5,
-      borderColor: 'grey',
-    },
-    errorInput: {
-      borderColor: 'red',
-    },
-    errorText: {
-      color: 'red',
-      alignSelf: 'flex-start',
     },
     button: {
       marginTop: 10, 

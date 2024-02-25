@@ -1,8 +1,9 @@
-import React, { useState, useContext } from 'react';
-import { View, Text, TextInput, Button, StyleSheet, Alert } from 'react-native';
+import React, { useState } from 'react';
+import { View, TextInput, Alert } from 'react-native';
 import DropDownPicker from 'react-native-dropdown-picker';
 import DateTimePickerModal from 'react-native-modal-datetime-picker'; 
 import CustomButton from '../components/CustomButton';
+import { globalStyles } from '../components/Helper';
 
 import { db } from '../firebaseConfig';
 import { collection, addDoc } from 'firebase/firestore';
@@ -64,7 +65,7 @@ const AddActivityScreen = ({ navigation }) => {
   };
 
   return (
-    <View style={styles.container}>
+    <View style={globalStyles.container}>
       <View style={{flex: 1}}>
       <DropDownPicker
         open={open}
@@ -82,11 +83,11 @@ const AddActivityScreen = ({ navigation }) => {
         setValue={setActivity}
         defaultValue={activity}
         containerStyle={{ height: 40, marginBottom: 20 }}
-        style={ styles.dropdown }
+        style={ globalStyles.dropdown }
         itemStyle={{
           justifyContent: 'flex-start',
         }}
-        dropDownStyle={styles.dropdown}
+        dropDownStyle={globalStyles.dropdown}
         onChangeItem={item => setActivity(item.value)}
       />
       <TextInput
@@ -94,10 +95,10 @@ const AddActivityScreen = ({ navigation }) => {
         value={duration}
         onChangeText={setDuration}
         keyboardType="numeric"
-        style={styles.input}
+        style={globalStyles.input}
       />
       <TextInput
-        style={styles.dateInput}
+        style={globalStyles.dateInput}
         value={date.toLocaleDateString()}
         placeholder="Choose Date"
         onTouchStart={showDatePicker} 
@@ -111,7 +112,7 @@ const AddActivityScreen = ({ navigation }) => {
         date={date} 
       />
       </View>
-      <View style={styles.buttonContainer}>
+      <View style={globalStyles.buttonContainer}>
       <CustomButton 
         title="Save"
         onPress={handleSave}
@@ -120,39 +121,5 @@ const AddActivityScreen = ({ navigation }) => {
     </View>
   );
 };
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    padding: 20,
-    backgroundColor: '#EDE7F6', 
-    justifyContent: 'space-between'
-  },
-  dropdown: {
-    backgroundColor: '#fafafa',
-    borderRadius: 10, 
-  },
-  input: {
-    borderWidth: 1,
-    borderColor: '#B39DDB', 
-    padding: 10,
-    marginBottom: 20,
-    borderRadius: 10,
-    color: '#000', 
-  },
-  dateInput: {
-    borderWidth: 1,
-    borderColor: '#B39DDB',
-    padding: 10,
-    marginBottom: 20,
-    borderRadius: 10,
-    color: '#000',
-  },
-  buttonContainer: {
-    borderRadius: 10, 
-    overflow: 'hidden', 
-    marginBottom: '25%',
-  },
-});
 
 export default AddActivityScreen;
