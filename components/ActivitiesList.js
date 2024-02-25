@@ -1,17 +1,23 @@
-import React, { useContext } from 'react';
+import React from 'react';
 import { View, Text, FlatList, StyleSheet } from 'react-native';
 import { TouchableOpacity } from 'react-native';
-
+import { useNavigation } from '@react-navigation/native';
 import { Ionicons } from '@expo/vector-icons';
 import { db } from "../firebaseConfig";
-import { getFirestore, doc, deleteDoc } from 'firebase/firestore';
+import { doc, deleteDoc } from 'firebase/firestore';
 import { Alert } from 'react-native';
 
 
 const ActivitiesList = ({ activities, specialOnly }) => {
+  const navigation = useNavigation();
 
   const isSpecial = (activity) => {
     return (activity.type === 'Running' || activity.type === 'Weight Training') && activity.duration > 60;
+  };
+
+  const handlePressActivity = (id) => {
+    navigation.navigate('EditActivityScreen', { activityId: id });
+
   };
 
   // Filter activities based on the specialOnly flag
@@ -30,18 +36,20 @@ const ActivitiesList = ({ activities, specialOnly }) => {
 
   // Render each activity item
   const renderActivityItem = ({ item }) => (
-    <View style={styles.item}>
-      <View style={styles.rowContainer}>
-        <Text style={styles.title}>
-          {item.type} {isSpecial(item) && <Text style={styles.special}>🌟</Text>}
-        </Text>
-        <Text style={styles.duration}>{item.duration} min</Text>
-        <Text style={styles.date}>{item.date}</Text>
+    <TouchableOpacity onPress={() => handlePressActivity(item.id)}>
+      <View style={styles.item}>
+        <View style={styles.rowContainer}>
+          <Text style={styles.title}>
+            {item.type} {isSpecial(item) && <Text style={styles.special}>🌟</Text>}
+          </Text>
+          <Text style={styles.duration}>{item.duration} min</Text>
+          <Text style={styles.date}>{item.date}</Text>
+        </View>
+        <TouchableOpacity style={styles.deleteIcon} onPress={() => handleDelete(item.id)}>
+          <Ionicons name="trash-bin" size={24} color="red" />
+        </TouchableOpacity>
       </View>
-      <TouchableOpacity style={styles.deleteIcon} onPress={() => handleDelete(item.id)}>
-        <Ionicons name="trash-bin" size={24} color="red" />
-      </TouchableOpacity>
-    </View>
+    </TouchableOpacity>
   );
   
 

@@ -4,6 +4,7 @@ import { NavigationContainer } from '@react-navigation/native';
 import StartScreen from './screens/StartScreen';
 import MainTabNavigator from './MainTabNavigator';
 import AddActivityScreen from './screens/AddActivityScreen';
+import EditActivityScreen from './screens/EditActivityScreen';
 
 const Stack = createStackNavigator();
 
@@ -25,6 +26,7 @@ function AppNavigator() {
         <Stack.Screen name="Start" component={StartScreen} options={{ headerShown: false }}/>
         <Stack.Screen name="Main" component={MainTabNavigator} />
         <Stack.Screen name="AddActivity" component={AddActivityScreen} />
+        <Stack.Screen name="EditActivityScreen" component={EditActivityScreen} />
       </Stack.Navigator>
     </NavigationContainer>
   );

@@ -1,10 +1,10 @@
 import React, { useLayoutEffect } from 'react';
-import { Button } from 'react-native';
+import { TouchableOpacity } from 'react-native';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import { getFocusedRouteNameFromRoute } from '@react-navigation/native';
 import AllActivitiesScreen from './screens/AllActivitiesScreen';
 import SpecialActivitiesScreen from './screens/SpecialActivitiesScreen';
-import { Entypo, AntDesign } from '@expo/vector-icons';
+import { Entypo, AntDesign, Ionicons } from '@expo/vector-icons';
 
 const Tab = createBottomTabNavigator();
 
@@ -13,11 +13,9 @@ function MainTabNavigator({ navigation, route }) {
   useLayoutEffect(() => {
     navigation.setOptions({
       headerRight: () => (
-        <Button
-          onPress={() => navigation.navigate('AddActivity')} 
-          title="Add"
-          color="#007AFF" 
-        />
+        <TouchableOpacity onPress={() => navigation.navigate('AddActivity')}>
+          <Ionicons name="add" size={30} color="#007AFF" />
+        </TouchableOpacity>
       ),
     });
   }, [navigation]);
